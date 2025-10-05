@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متتبع قوائم التشغيل - YouTube Progress Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-text">
+                    <h1 class="title">📺 متتبع قوائم تشغيل YouTube</h1>
+                    <p class="subtitle">تتبع تقدمك في مشاهدة الدورات والقوائم التعليمية</p>
+                </div>
+                <div class="header-controls">
+                    <button id="languageToggle" class="language-toggle" title="تبديل اللغة">
+                        <span class="language-text">EN</span>
+                    </button>
+                    <button id="darkModeToggle" class="dark-mode-toggle" title="تبديل الوضع الليلي">
+                        <span class="toggle-icon">🌙</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            
+            <!-- API Key Setup Section (shows only if no API key) -->
+            <section id="apiKeySetupSection" class="api-key-setup" style="display: none;">
+                <div class="setup-card">
+                    <h2 class="setup-title">🔑 مرحباً! دعنا نبدأ الإعداد</h2>
+                    <p class="setup-description">
+                        لجلب قوائم التشغيل تلقائياً من YouTube، نحتاج إلى مفتاح API مجاني.
+                        <strong>لا تقلق، العملية بسيطة جداً وتأخذ 3 دقائق فقط!</strong> ✨
+                    </p>
+                    
+                    <div class="setup-steps">
+                        <h3>📝 كيفية الحصول على مفتاح API:</h3>
+                        <ol>
+                            <li>اذهب إلى <a href="https://console.cloud.google.com/" target="_blank" rel="noopener">Google Cloud Console</a></li>
+                            <li>أنشئ مشروع جديد أو اختر مشروعاً موجوداً</li>
+                            <li>فعّل <strong>YouTube Data API v3</strong></li>
+                            <li>اذهب إلى "بيانات الاعتماد" (Credentials) وأنشئ "مفتاح API"</li>
+                            <li>انسخ المفتاح والصقه أدناه</li>
+                        </ol>
+                        <p class="setup-note">💡 <strong>مجاني تماماً:</strong> 10,000 طلب يومياً (كافية لآلاف القوائم!)</p>
+                    </div>
+
+                    <form id="apiKeyForm" class="api-key-form">
+                        <div class="form-group">
+                            <label for="apiKeyInput">مفتاح YouTube API:</label>
+                            <input 
+                                type="text" 
+                                id="apiKeyInput" 
+                                placeholder="AIzaSy..."
+                                class="input-field"
+                                required
+                            >
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            ✅ حفظ والبدء
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Add Playlist Section -->
+            <section id="addPlaylistSection" class="add-playlist-section">
+                <div class="section-header">
+                    <h2 class="section-title">➕ إضافة قائمة تشغيل جديدة</h2>
+                    <button id="apiKeySettingsBtn" class="btn-settings" title="إعدادات API Key">⚙️</button>
+                </div>
+                
+                <form id="addPlaylistForm" class="playlist-form">
+                    <div class="form-group">
+                        <label for="playlistName">اسم القائمة (اختياري):</label>
+                        <input 
+                            type="text" 
+                            id="playlistName" 
+                            placeholder="مثال: دورة تعلم JavaScript"
+                            class="input-field"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="playlistUrl">رابط قائمة التشغيل:</label>
+                        <input 
+                            type="text" 
+                            id="playlistUrl" 
+                            placeholder="https://www.youtube.com/playlist?list=PLxxxxxx"
+                            class="input-field"
+                            required
+                        >
+                        <small class="hint">💡 الصق رابط أي قائمة تشغيل على YouTube وسنجلب جميع الفيديوهات تلقائياً!</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="addPlaylistBtn">
+                        <span class="btn-text">🚀 جلب القائمة</span>
+                        <span class="loader" style="display: none;">⏳ جاري التحميل...</span>
+                    </button>
+                </form>
+
+                <!-- Error/Success Messages -->
+                <div id="messageBox" class="message-box" style="display: none;"></div>
+            </section>
+
+            <!-- Playlists Display Section -->
+            <section class="playlists-section">
+                <h2 class="section-title">📋 قوائم التشغيل المحفوظة</h2>
+                
+                <!-- Playlists Container (populated by JS) -->
+                <div id="playlistsContainer" class="playlists-container">
+                    <!-- Playlists will be rendered here by JavaScript -->
+                    <div class="empty-state">
+                        <p>لا توجد قوائم محفوظة بعد</p>
+                        <p class="empty-hint">ابدأ بإضافة قائمة تشغيل أعلاه! 👆</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-creator">صنع بواسطة Ahmed Kamel ❤️</p>
+            <a href="https://paypal.me/Ahmedkamel245" target="_blank" rel="noopener" class="support-btn">
+                ☕ ادعمني
+            </a>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
